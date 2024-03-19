@@ -1,0 +1,9 @@
+id: foo
+flags: simple
+_summary: A foo job
+command: true
+
+id: bar
+flags: simple
+_summary: A bar job
+command: false

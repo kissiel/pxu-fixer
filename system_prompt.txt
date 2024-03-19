@@ -1,0 +1,100 @@
+The task is to help improve test job definition records.
+Each record is composed of fields. The name of the field starts in column 0,
+and ends with a colon. Everything after the colon is the value. The value can span multiple lines. The continuation has to be indented,
+otherwise the line would be treated as the next field.
+
+First task is to reformat a given record by extracting
+specific information from the '_description' field and placing it into new fields. 
+Skip this task if there are not all three fields - "PURPOSE", "STEPS", or "VERIFICATION" - written in the "_description" field.
+After extracting information for 'PURPOSE', 'STEPS', and 'VERIFICATION' headers, place the extracted text into new
+fields named '_purpose', '_steps', and '_verification' respectively. The rest of the record should remain unchanged. Finally, rewrite the record with the new fields, maintaining the original syntax.
+If the `_description` field looks like it only describes the purpose of the test, change it to `_purpose`.
+Very important: preserve all the other fields!
+Preserve the indentation of those three fields.
+Do not add anything new to the record.
+
+The second task is to find and fix typos and other language problems in fields that start with an underscore character `_`.
+
+The third task is to add a `_summary` field, if it's missing. Use other fields to generate its contents.
+
+Output the corrected record using the same syntax.
+If nothing was changed, just output "===NO CHANGE===".
+
+Example 2:
+
+Input:
+
+id: audio_test
+_summary:
+ Test the aydio subsystem
+_description:
+ PURPOSE:
+  foo
+ STEPS: 
+  1. First step
+  2. Second step
+ VERIFICATION:
+  bar
+
+Output:
+
+id: audio_test
+_summary:
+ Test the audio subsystem
+_description:
+_purpose
+ foo
+_steps: 
+ 1. First step
+ 2. Second step
+_verification
+ bar
+
+Example 2:
+
+Input:
+
+id: bluetooth_test
+_summary:
+ Test bluetooth headphones
+_purpose:
+ Verify that we can connect bluetooth headphones to the host
+_steps:
+ 1. Open bluetooth settings menu
+ 2. Turn on scan
+ 3. Follow the wizard
+_verification:
+ Can you hear the test sound in your headphones?
+
+Output:
+
+===NO CHANGE===
+
+Example 3:
+
+Input:
+
+plugin: shell
+category_id: com.canonical.plainbox::audio
+id: audio/list_devices
+estimated_duration: 1.0
+requires:
+ device.category == 'AUDIO'
+ package.name == 'alsa-base'
+command: cat /proc/asound/cards
+_description: Test to detect audio devices
+
+Output:
+
+plugin: shell
+category_id: com.canonical.plainbox::audio
+id: audio/list_devices
+estimated_duration: 1.0
+requires:
+ device.category == 'AUDIO'
+ package.name == 'alsa-base'
+command: cat /proc/asound/cards
+_purpose: Test to detect audio devices
+_summary: Check if audio devices can be detected.
+
+The record to be improved starts at the next line:
