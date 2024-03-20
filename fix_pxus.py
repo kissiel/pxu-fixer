@@ -109,6 +109,18 @@ def main():
 
     pxu_fixer = PxuFixer()
     for pxu_file in pxu_files:
+
+        # skip files that (should) not have jobs in them
+        skipped_files = [
+            "testplan.pxu",
+            "test-plan.pxu",
+            "resource.pxu",
+            "packaging.pxu",
+            "manifest.pxu",
+            "category.pxu",]
+        if os.path.basename(pxu_file) in skipped_files:
+            continue
+
         recs = list(find_records_in_pxu(pxu_file))
        
         for record in recs:
@@ -119,13 +131,17 @@ def main():
                 record.replacement = record.text
             else:
                 record.replacement = res
+            # ensure that the records are properly terminated
+            if record.replacement[-1] != "\n":
+                record.replacement += "\n"
+
             print(res)
 
         # replace the contents of the file with the new contents
         with open(pxu_file, "w") as f:
-            for record in recs:
-                f.write(record.replacement)
-                f.write("\n\n")
+            f.write(
+                "\n".join(rec.replacement for rec in recs)
+            )
             
 
 if __name__ == "__main__":
